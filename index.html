@@ -1,0 +1,145 @@
+
+
+<!-- It all goes in one file! Take it all you dirty html slut! -->
+
+<canvas id="sexyGoesHere" width="400" height="300"></canvas>
+
+<img id="snugg" src="snugg.png" hidden="true"></img>
+<img id="bg" src="bg.png" hidden="true"></img>
+<img id="stick" src="stick.png" hidden="true"></img>
+<img id="house" src="house.png" hidden="true"></img>
+<img id="exhouse" src="exhouse.png" hidden="true"></img>
+
+<script>
+// basic stuff
+var canvas = document.getElementById("sexyGoesHere");
+var ctx = canvas.getContext("2d");
+ctx.fillStyle = "#FF0000";//bloooooooood!
+//var img = document.getElementById("snugg");
+var snuggX = 10;
+var snuggY = 10;
+var goingRight=false;
+var goingLeft=false;
+var jumping = false;
+var yVol = 0;
+var touchingGround = false;
+var correct = true;
+
+
+
+function keyDown(e) {
+    if (e.code == "Space" && !jumping && touchingGround){
+        jumping=true;
+        touchingGround=false;
+        snuggY-=10;
+        yVol = -20;
+    }else if (e.code == "Space"){
+        //no more jumping
+    }else if (e.code == "KeyD"){
+        correct=true;
+        goingRight=true;
+    }else if (e.code == "KeyA"){
+        correct=false;
+        goingLeft=true;
+    }
+
+}
+function keyUp(e) {
+    if (e.code == "Space"){
+        jumping=false;
+        yVol = 0;
+    }else if (e.code == "KeyD"){
+        goingRight=false;
+    }else if (e.code == "KeyA"){
+        goingLeft=false;
+    }
+
+}
+
+document.addEventListener('keydown', keyDown);
+document.addEventListener('keyup', keyUp);
+
+function drawSnugg(){
+    if(correct){
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(snugg,canvas.width-snugg.width-snuggX,snuggY);
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+    }else{
+        ctx.drawImage(snugg,snuggX,snuggY);
+    }
+}
+
+tinies = [];
+for (var i = 0; i<10;i++) tinies.push(Math.random()*400);
+crushed = [];
+houses = [];
+for (var i = 0; i<3;i++) houses.push(Math.random()*400);
+exhouses = [];
+
+function drawSticks(){
+    for (var i = 0; i<houses.length;i++){
+        ctx.drawImage(house,houses[i],snuggfloor-house.height);
+    }
+    //ctx.globalAlpha = 0.5;
+    for (var i = 0; i<exhouses.length;i++){
+        ctx.drawImage(exhouse,exhouses[i],snuggfloor-exhouse.height);
+    }
+    for (var i = 0; i<tinies.length;i++){
+        if(tinies[i]>snuggX+25) tinies[i]+=Math.random()*1;
+        else tinies[i]-=Math.random()*1;
+        ctx.drawImage(stick,tinies[i],snuggfloor-stick.height);
+    }
+    //ctx.globalAlpha = 1.0;
+    for (var i = 0; i<crushed.length;i++){
+        ctx.fillRect(crushed[i], snuggfloor-1, 5, 1);
+    }
+}
+function crushTinies(){
+    for (var i = 0; i<tinies.length;i++){
+        if (tinies[i] > snuggX && tinies[i] < snuggX+snugg.width){
+            crushed.push(tinies[i]);
+            delete tinies[i];
+        }
+    }
+    for (var i = 0; i<houses.length;i++){
+        if (houses[i]+house.width > snuggX && houses[i] < snuggX+snugg.width){
+            exhouses.push(houses[i]);
+            delete houses[i];
+        }
+    }
+}
+
+var snuggfloor = 280;
+function tik() {
+    ctx.clearRect(0,0,400,300);
+    ctx.drawImage(bg,0,0);
+    drawSnugg();
+    drawSticks();
+    if(goingLeft) snuggX-=10;
+    if(goingRight) snuggX+=10;
+
+    if(jumping) {
+        yVol-=4;
+    }
+    if (snuggY < snuggfloor-snugg.height){
+        yVol+=6;
+        snuggY+=yVol;
+    }
+    if (snuggY >= snuggfloor-snugg.height){
+        if(!touchingGround) crushTinies();
+        touchingGround=true;
+        snuggY = snuggfloor-snugg.height;
+    }
+    setTimeout(tik,100);
+}
+
+tik();
+
+</script>
+
+
+
+
+
