@@ -82,7 +82,7 @@ exhouses = [];
 
 function drawSticks(){
     for (var i = 0; i<houses.length;i++){
-        ctx.drawImage(house,houses[i],snuggfloor-house.height-1);
+        ctx.drawImage(house,houses[i],snuggfloor-house.height+1);
     }
     //ctx.globalAlpha = 0.5;
     for (var i = 0; i<exhouses.length;i++){
