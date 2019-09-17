@@ -1,12 +1,13 @@
 
-
 <!-- It all goes in one file! Take it all you dirty html slut! -->
 
 <canvas id="sexyGoesHere" width="400" height="300"></canvas>
 <br>
-wsad and space move the snugg!
+wsad and space move the snugg
 
-<img id="snugg" src="snugg.png" hidden="true"></img>
+<img id="snugg1" src="snugg1.png" hidden="true"></img>
+<img id="snugg2" src="snugg2.png" hidden="true"></img>
+<img id="snugg3" src="snugg3.png" hidden="true"></img>
 <img id="bg" src="bg.png" hidden="true"></img>
 <img id="stick" src="stick.png" hidden="true"></img>
 <img id="house" src="house.png" hidden="true"></img>
@@ -17,7 +18,8 @@ wsad and space move the snugg!
 var canvas = document.getElementById("sexyGoesHere");
 var ctx = canvas.getContext("2d");
 ctx.fillStyle = "#FF0000";//bloooooooood!
-//var img = document.getElementById("snugg");
+var frame = 0;
+var snuggframes = [snugg1,snugg2,snugg3];
 var snuggX = 10;
 var snuggY = 10;
 var goingRight=false;
@@ -62,14 +64,15 @@ document.addEventListener('keydown', keyDown);
 document.addEventListener('keyup', keyUp);
 
 function drawSnugg(){
+    var snuggframe = frame%3;//Math.floor(frame%6/2);
     if(correct){
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
-        ctx.drawImage(snugg,canvas.width-snugg.width-snuggX,snuggY);
+        ctx.drawImage(snuggframes[snuggframe],canvas.width-snugg1.width-snuggX,snuggY);
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
     }else{
-        ctx.drawImage(snugg,snuggX,snuggY);
+        ctx.drawImage(snuggframes[snuggframe],snuggX,snuggY);
     }
 }
 
@@ -100,13 +103,13 @@ function drawSticks(){
 }
 function crushTinies(){
     for (var i = 0; i<tinies.length;i++){
-        if (tinies[i] > snuggX && tinies[i] < snuggX+snugg.width){
+        if (tinies[i] > snuggX && tinies[i] < snuggX+snugg1.width){
             crushed.push(tinies[i]);
             delete tinies[i];
         }
     }
     for (var i = 0; i<houses.length;i++){
-        if (houses[i]+house.width > snuggX && houses[i] < snuggX+snugg.width){
+        if (houses[i]+house.width > snuggX && houses[i] < snuggX+snugg1.width){
             exhouses.push(houses[i]);
             delete houses[i];
         }
@@ -115,6 +118,7 @@ function crushTinies(){
 
 var snuggfloor = 280;
 function tik() {
+    frame++;
     ctx.clearRect(0,0,400,300);
     ctx.drawImage(bg,0,0);
     drawSnugg();
@@ -125,14 +129,14 @@ function tik() {
     if(jumping) {
         yVol-=4;
     }
-    if (snuggY < snuggfloor-snugg.height){
+    if (snuggY < snuggfloor-snugg1.height){
         yVol+=6;
         snuggY+=yVol;
     }
-    if (snuggY >= snuggfloor-snugg.height){
+    if (snuggY >= snuggfloor-snugg1.height){
         if(!touchingGround) crushTinies();
         touchingGround=true;
-        snuggY = snuggfloor-snugg.height;
+        snuggY = snuggfloor-snugg1.height;
     }
     setTimeout(tik,100);
 }
@@ -140,8 +144,3 @@ function tik() {
 tik();
 
 </script>
-
-
-
-
-
