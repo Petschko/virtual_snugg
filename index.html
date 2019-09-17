@@ -86,7 +86,7 @@ function drawSticks(){
     }
     //ctx.globalAlpha = 0.5;
     for (var i = 0; i<exhouses.length;i++){
-        ctx.drawImage(exhouse,exhouses[i],snuggfloor-exhouse.height);
+        ctx.drawImage(exhouse,exhouses[i],snuggfloor-exhouse.height+1);
     }
     for (var i = 0; i<tinies.length;i++){
         if(tinies[i]>snuggX+25) tinies[i]+=Math.random()*1;
