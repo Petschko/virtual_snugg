@@ -4,6 +4,8 @@
 <canvas id="sexyGoesHere" width="400" height="300"></canvas>
 <br>
 wsad and space move the snugg
+<br>
+c clears and r raises the amount of tinies
 
 <img id="snugg1" src="snugg1.png" hidden="true"></img>
 <img id="snugg2" src="snugg2.png" hidden="true"></img>
@@ -32,7 +34,7 @@ var buttcrushing = false;
 var yVol = 0;
 var touchingGround = false;
 var correct = true;
-
+var snuggfloor = 280;
 
 
 function keyDown(e) {
@@ -56,6 +58,10 @@ function keyDown(e) {
     }else if (e.code == "KeyS"){
         if (!buttcrushing && touchingGround) crushTinies();
         buttcrushing=true;
+    }else if (e.code == "KeyR"){
+        makeMoreTinies();
+    }else if (e.code == "KeyC"){
+        initTinies();
     }
 
 }
@@ -101,21 +107,21 @@ function drawSnugg(){
     }
 }
 
-tinies = [];
-for (var i = 0; i<10;i++) tinies.push(Math.random()*400);
-crushed = [];
-houses = [];
-for (var i = 0; i<3;i++) houses.push(Math.random()*400);
-exhouses = [];
+function initTinies(){
+    tinies = [];
+    crushed = [];
+    houses = [];
+    exhouses = [];
+}
+initTinies();
+function makeMoreTinies(){
+    for (var i = 0; i<10;i++) tinies.push(Math.random()*400);
+    for (var i = 0; i<3;i++) houses.push(Math.random()*400);
+}
+makeMoreTinies();
+
 
 function drawSticks(){
-    for (var i = 0; i<houses.length;i++){
-        ctx.drawImage(house,houses[i],snuggfloor-house.height+1);
-    }
-    //ctx.globalAlpha = 0.5;
-    for (var i = 0; i<exhouses.length;i++){
-        ctx.drawImage(exhouse,exhouses[i],snuggfloor-exhouse.height+1);
-    }
     for (var i = 0; i<tinies.length;i++){
         if(tinies[i]>snuggX+25) tinies[i]+=Math.random()*1;
         else tinies[i]-=Math.random()*1;
@@ -124,6 +130,24 @@ function drawSticks(){
     //ctx.globalAlpha = 1.0;
     for (var i = 0; i<crushed.length;i++){
         ctx.fillRect(crushed[i], snuggfloor-1, 5, 1);
+    }
+}
+function drawEvenHouses(){
+    for (var i = 0; i<houses.length;i+=2){
+        ctx.drawImage(house,houses[i],snuggfloor-house.height+1);
+    }
+    //ctx.globalAlpha = 0.5;
+    for (var i = 0; i<exhouses.length;i+=2){
+        ctx.drawImage(exhouse,exhouses[i],snuggfloor-exhouse.height+1);
+    }
+}
+function drawOddHouses(){
+    for (var i = 1; i<houses.length;i+=2){
+        ctx.drawImage(house,houses[i],snuggfloor-house.height+1);
+    }
+    //ctx.globalAlpha = 0.5;
+    for (var i = 1; i<exhouses.length;i+=2){
+        ctx.drawImage(exhouse,exhouses[i],snuggfloor-exhouse.height+1);
     }
 }
 function crushTinies(){
@@ -141,13 +165,14 @@ function crushTinies(){
     }
 }
 
-var snuggfloor = 280;
 
 function tik() {
     frame++;
     ctx.clearRect(0,0,400,300);
     ctx.drawImage(bg,0,0);
+    drawEvenHouses();
     drawSnugg();
+    drawOddHouses();
     drawSticks();
     if (!touchingGround || !buttcrushing){
         if(goingLeft) snuggX-=10;
