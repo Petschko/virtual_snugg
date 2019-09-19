@@ -8,6 +8,9 @@ wsad and space move the snugg
 <img id="snugg1" src="snugg1.png" hidden="true"></img>
 <img id="snugg2" src="snugg2.png" hidden="true"></img>
 <img id="snugg3" src="snugg3.png" hidden="true"></img>
+<img id="snugg_buttcrush" src="snugg_buttcrush.png" hidden="true"></img>
+<img id="snugg_buttcrush_forward" src="snugg_buttcrush_forward.png" hidden="true"></img>
+<img id="snugg_buttcrush_backward" src="snugg_buttcrush_backward.png" hidden="true"></img>
 <img id="bg" src="bg.png" hidden="true"></img>
 <img id="stick" src="stick.png" hidden="true"></img>
 <img id="house" src="house.png" hidden="true"></img>
@@ -25,6 +28,7 @@ var snuggY = 10;
 var goingRight=false;
 var goingLeft=false;
 var jumping = false;
+var buttcrushing = false;
 var yVol = 0;
 var touchingGround = false;
 var correct = true;
@@ -32,7 +36,7 @@ var correct = true;
 
 
 function keyDown(e) {
-    if (e.code == "Space" && !jumping && touchingGround){
+    if (e.code == "Space" && !jumping && touchingGround && !buttcrushing){
         jumping=true;
         touchingGround=false;
         snuggY-=10;
@@ -40,11 +44,18 @@ function keyDown(e) {
     }else if (e.code == "Space"){
         //no more jumping
     }else if (e.code == "KeyD"){
-        correct=true;
+        if(!buttcrushing){
+            correct=true;
+        }
         goingRight=true;
     }else if (e.code == "KeyA"){
-        correct=false;
-        goingLeft=true;
+        if(!buttcrushing){
+            correct=false;
+        }
+        goingLeft=true
+    }else if (e.code == "KeyS"){
+        if (!buttcrushing && touchingGround) crushTinies();
+        buttcrushing=true;
     }
 
 }
@@ -56,6 +67,8 @@ function keyUp(e) {
         goingRight=false;
     }else if (e.code == "KeyA"){
         goingLeft=false;
+    }else if (e.code == "KeyS"){
+        buttcrushing=false;
     }
 
 }
@@ -64,15 +77,26 @@ document.addEventListener('keydown', keyDown);
 document.addEventListener('keyup', keyUp);
 
 function drawSnugg(){
-    var snuggframe = frame%3;//Math.floor(frame%6/2);
+    var img;
+    if(buttcrushing){
+        if (correct){
+            if (goingRight) img = snugg_buttcrush_forward;
+            else if (goingLeft) img = snugg_buttcrush_backward;
+            else img = snugg_buttcrush;
+        }else{
+            if (goingLeft) img = snugg_buttcrush_forward;
+            else if (goingRight) img = snugg_buttcrush_backward;
+            else img = snugg_buttcrush;
+        }
+    }else img = snuggframes[frame%3];
     if(correct){
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
-        ctx.drawImage(snuggframes[snuggframe],canvas.width-snugg1.width-snuggX,snuggY);
+        ctx.drawImage(img,canvas.width-snugg1.width-snuggX,snuggY);
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
     }else{
-        ctx.drawImage(snuggframes[snuggframe],snuggX,snuggY);
+        ctx.drawImage(img,snuggX,snuggY);
     }
 }
 
@@ -123,14 +147,17 @@ function tik() {
     ctx.drawImage(bg,0,0);
     drawSnugg();
     drawSticks();
-    if(goingLeft) snuggX-=10;
-    if(goingRight) snuggX+=10;
+    if (!touchingGround || !buttcrushing){
+        if(goingLeft) snuggX-=10;
+        if(goingRight) snuggX+=10;
+    }
 
     if(jumping) {
         yVol-=4;
     }
     if (snuggY < snuggfloor-snugg1.height){
         yVol+=6;
+        if (buttcrushing) yVol+=4;
         snuggY+=yVol;
     }
     if (snuggY >= snuggfloor-snugg1.height){
