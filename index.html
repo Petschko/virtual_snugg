@@ -60,7 +60,8 @@ function keyDown(e) {
         }
         goingLeft=true
     }else if (e.code == "KeyS"){
-        if (goingRight || goingLeft){
+        if ((goingRight || goingLeft)
+            && !bellycrushing){
             bellycrushing = true;
             frame = 0;
         }else{
@@ -96,7 +97,7 @@ function drawSnugg(){
     var img;
     snuggoffset = 0
     if(bellycrushing){
-        snuggoffset=20;
+        snuggoffset= 20;//correct?25:20;
         if(frame<3) img = snugg_bellycrush1;
         else img = snugg_bellycrush2;
         if (frame==3){
@@ -117,7 +118,7 @@ function drawSnugg(){
     if(correct){
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
-        ctx.drawImage(img,canvas.width-snugg1.width-2*snuggoffset-snuggX,snuggY);
+        ctx.drawImage(img,canvas.width-snugg1.width-snuggoffset-snuggX,snuggY);
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
     }else{
@@ -183,14 +184,15 @@ function crushTinies(){
     }
 }
 function crushTiniesWithBellyAndBoobs(){
+    offset = correct ? -15:0;
     for (var i = 0; i<tinies.length;i++){
-        if (tinies[i] > snuggX && tinies[i] < snuggX+60){
+        if (tinies[i] > snuggX+offset && tinies[i] < snuggX+offset+60){
             crushed.push(tinies[i]);
             delete tinies[i];
         }
     }
     for (var i = 0; i<houses.length;i++){
-        if (houses[i]+house.width > snuggX && houses[i] < snuggX+60){
+        if (houses[i]+house.width > snuggX+offset && houses[i] < snuggX+offset+60){
             exhouses.push(houses[i]);
             delete houses[i];
         }
@@ -210,9 +212,18 @@ function tik() {
         bellycrushing=false;
         stand_up = false;
     }
-    if (!touchingGround || !buttcrushing){
-        if(goingLeft) snuggX-=10;
-        if(goingRight) snuggX+=10;
+    if ((!touchingGround || !buttcrushing)// u cant move when butcrushing and on ground
+        ){
+        if (!bellycrushing){
+            if(goingLeft) snuggX-=10;
+            if(goingRight) snuggX+=10;
+        }else{
+            if (frame < 13){
+                if(goingLeft) snuggX-=14-frame;
+                if(goingRight) snuggX+=14-frame;
+                crushTiniesWithBellyAndBoobs();
+            }
+        }
     }
 
     if(jumping) {
