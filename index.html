@@ -13,6 +13,8 @@ c clears and r raises the amount of tinies
 <img id="snugg_buttcrush" src="snugg_buttcrush.png" hidden="true"></img>
 <img id="snugg_buttcrush_forward" src="snugg_buttcrush_forward.png" hidden="true"></img>
 <img id="snugg_buttcrush_backward" src="snugg_buttcrush_backward.png" hidden="true"></img>
+<img id="snugg_bellycrush1" src="snugg_bellycrush1.png" hidden="true"></img>
+<img id="snugg_bellycrush2" src="snugg_bellycrush2.png" hidden="true"></img>
 <img id="bg" src="bg.png" hidden="true"></img>
 <img id="stick" src="stick.png" hidden="true"></img>
 <img id="house" src="house.png" hidden="true"></img>
@@ -35,6 +37,8 @@ var yVol = 0;
 var touchingGround = false;
 var correct = true;
 var snuggfloor = 280;
+var bellycrushing = false;
+var stand_up = false;
 
 
 function keyDown(e) {
@@ -56,8 +60,13 @@ function keyDown(e) {
         }
         goingLeft=true
     }else if (e.code == "KeyS"){
-        if (!buttcrushing && touchingGround) crushTinies();
-        buttcrushing=true;
+        if (goingRight || goingLeft){
+            bellycrushing = true;
+            frame = 0;
+        }else{
+            if (!buttcrushing && touchingGround) crushTinies();
+            buttcrushing=true;
+        }
     }else if (e.code == "KeyR"){
         makeMoreTinies();
     }else if (e.code == "KeyC"){
@@ -75,6 +84,7 @@ function keyUp(e) {
         goingLeft=false;
     }else if (e.code == "KeyS"){
         buttcrushing=false;
+        stand_up=true;
     }
 
 }
@@ -84,7 +94,15 @@ document.addEventListener('keyup', keyUp);
 
 function drawSnugg(){
     var img;
-    if(buttcrushing){
+    snuggoffset = 0
+    if(bellycrushing){
+        snuggoffset=20;
+        if(frame<3) img = snugg_bellycrush1;
+        else img = snugg_bellycrush2;
+        if (frame==3){
+            crushTiniesWithBellyAndBoobs();
+        }
+    }else if(buttcrushing){
         if (correct){
             if (goingRight) img = snugg_buttcrush_forward;
             else if (goingLeft) img = snugg_buttcrush_backward;
@@ -99,11 +117,11 @@ function drawSnugg(){
     if(correct){
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
-        ctx.drawImage(img,canvas.width-snugg1.width-snuggX,snuggY);
+        ctx.drawImage(img,canvas.width-snugg1.width-2*snuggoffset-snuggX,snuggY);
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
     }else{
-        ctx.drawImage(img,snuggX,snuggY);
+        ctx.drawImage(img,snuggX-snuggoffset,snuggY);
     }
 }
 
@@ -164,6 +182,20 @@ function crushTinies(){
         }
     }
 }
+function crushTiniesWithBellyAndBoobs(){
+    for (var i = 0; i<tinies.length;i++){
+        if (tinies[i] > snuggX && tinies[i] < snuggX+60){
+            crushed.push(tinies[i]);
+            delete tinies[i];
+        }
+    }
+    for (var i = 0; i<houses.length;i++){
+        if (houses[i]+house.width > snuggX && houses[i] < snuggX+60){
+            exhouses.push(houses[i]);
+            delete houses[i];
+        }
+    }
+}
 
 
 function tik() {
@@ -174,6 +206,10 @@ function tik() {
     drawSnugg();
     drawOddHouses();
     drawSticks();
+    if (stand_up && frame >5){
+        bellycrushing=false;
+        stand_up = false;
+    }
     if (!touchingGround || !buttcrushing){
         if(goingLeft) snuggX-=10;
         if(goingRight) snuggX+=10;
