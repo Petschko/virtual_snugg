@@ -88,7 +88,8 @@ function drawSnugg(){
             else if (goingRight) img = snugg_buttcrush_backward;
             else img = snugg_buttcrush;
         }
-    }else img = snuggframes[frame%3];
+    }else if (goingLeft || goingRight) img = snuggframes[frame%3];
+    else img = snugg1;
     if(correct){
         ctx.translate(canvas.width, 0);
         ctx.scale(-1, 1);
@@ -141,6 +142,7 @@ function crushTinies(){
 }
 
 var snuggfloor = 280;
+
 function tik() {
     frame++;
     ctx.clearRect(0,0,400,300);
