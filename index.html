@@ -38,31 +38,33 @@ var touchingGround = false;
 var correct = true;
 var snuggfloor = 280;
 var bellycrushing = false;
+var sliding = false;
 var stand_up = false;
 
 
 function keyDown(e) {
-    if (e.code == "Space" && !jumping && touchingGround && !buttcrushing){
+    if (e.code == "Space" && !jumping && touchingGround && !buttcrushing && !bellycrushing){
         jumping=true;
         touchingGround=false;
         snuggY-=10;
         yVol = -20;
-    }else if (e.code == "Space"){
+    }else if (e.code == "Space"){//JUMP
         //no more jumping
-    }else if (e.code == "KeyD"){
-        if(!buttcrushing){
+    }else if (e.code == "KeyD"){//RIGHT
+        if(!buttcrushing && !bellycrushing){
             correct=true;
         }
         goingRight=true;
-    }else if (e.code == "KeyA"){
-        if(!buttcrushing){
+    }else if (e.code == "KeyA"){//LEFT
+        if(!buttcrushing && !bellycrushing){
             correct=false;
         }
         goingLeft=true
-    }else if (e.code == "KeyS"){
+    }else if (e.code == "KeyS"){//DOWN
         if ((goingRight || goingLeft)
             && !bellycrushing){
             bellycrushing = true;
+            sliding=true;
             frame = 0;
         }else{
             if (!buttcrushing && touchingGround) crushTinies();
@@ -81,8 +83,10 @@ function keyUp(e) {
         yVol = 0;
     }else if (e.code == "KeyD"){
         goingRight=false;
+        sliding=false;
     }else if (e.code == "KeyA"){
         goingLeft=false;
+        sliding=false;
     }else if (e.code == "KeyS"){
         buttcrushing=false;
         stand_up=true;
@@ -208,6 +212,7 @@ function tik() {
     drawSnugg();
     drawOddHouses();
     drawSticks();
+
     if (stand_up && frame >5){
         bellycrushing=false;
         stand_up = false;
@@ -218,7 +223,7 @@ function tik() {
             if(goingLeft) snuggX-=10;
             if(goingRight) snuggX+=10;
         }else{
-            if (frame < 13){
+            if (frame < 13 && sliding){
                 if(goingLeft) snuggX-=14-frame;
                 if(goingRight) snuggX+=14-frame;
                 crushTiniesWithBellyAndBoobs();
