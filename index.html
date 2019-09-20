@@ -188,17 +188,19 @@ function crushTinies(){
     }
 }
 function crushTiniesWithBellyAndBoobs(){
-    offset = correct ? -15:0;
-    for (var i = 0; i<tinies.length;i++){
-        if (tinies[i] > snuggX+offset && tinies[i] < snuggX+offset+60){
-            crushed.push(tinies[i]);
-            delete tinies[i];
+    if(touchingGround){
+        offset = correct ? -15:0;
+        for (var i = 0; i<tinies.length;i++){
+            if (tinies[i] > snuggX+offset && tinies[i] < snuggX+offset+60){
+                crushed.push(tinies[i]);
+                delete tinies[i];
+            }
         }
-    }
-    for (var i = 0; i<houses.length;i++){
-        if (houses[i]+house.width > snuggX+offset && houses[i] < snuggX+offset+60){
-            exhouses.push(houses[i]);
-            delete houses[i];
+        for (var i = 0; i<houses.length;i++){
+            if (houses[i]+house.width > snuggX+offset && houses[i] < snuggX+offset+60){
+                exhouses.push(houses[i]);
+                delete houses[i];
+            }
         }
     }
 }
