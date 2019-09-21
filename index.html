@@ -170,19 +170,28 @@ function initTinies(){
     exhouses = [];
 }
 function makeMoreTinies(){
-    for (var i = 0; i<10;i++) tinies.push(Math.random()*400);
+    // tinies are [position, speed]
+    // where position is their x dist from stage right
+    // and speed is their speed of travel to the right per tick
+    for (var i = 0; i<10;i++) tinies.push([Math.random()*400,0]);
+    // houses are just a position. x dist. You know the deal.
     for (var i = 0; i<3;i++) houses.push(Math.random()*400);
 }
 initTinies();
 makeMoreTinies();
 
+tinySpeed = 0.7;
 function drawSticks(){
     for (var i = 0; i<tinies.length;i++){
-        if(tinies[i]>snuggX+25) tinies[i]+=Math.random()*1;
-        else tinies[i]-=Math.random()*1;
-        ctx.drawImage(stick,tinies[i],snuggfloor-stick.height);
+        if (frame%3 == 0) {
+            if(tinies[i][0]>snuggX+25) tinies[i][1]+=Math.random()*tinySpeed-tinySpeed/4;
+            else tinies[i][1]-=Math.random()*tinySpeed-tinySpeed/4;
+            if (tinies[i][1] > tinySpeed) tinies[i][1] = tinySpeed;
+            if (tinies[i][1] < -tinySpeed) tinies[i][1] = -tinySpeed;
+        }
+        tinies[i][0]+=tinies[i][1];// actually move em!
+        ctx.drawImage(stick,tinies[i][0],snuggfloor-stick.height);
     }
-    //ctx.globalAlpha = 1.0;
     for (var i = 0; i<crushed.length;i++){
         ctx.fillRect(crushed[i], snuggfloor-1, 5, 1);
     }
@@ -207,9 +216,9 @@ function drawOddHouses(){
 }
 function crushTinies(){
     for (var i = 0; i<tinies.length;i++){
-        if (tinies[i] > snuggX && tinies[i] < snuggX+snugg1.width){
-            crushed.push(tinies[i]);
-            delete tinies[i];
+        if (tinies[i][0] > snuggX && tinies[i][0] < snuggX+snugg1.width){
+            crushed.push(tinies[i][0]);
+            delete tinies[i][0];
         }
     }
     for (var i = 0; i<houses.length;i++){
@@ -222,12 +231,12 @@ function crushTinies(){
 function pickupTiny(){
     for (var i = 0; i<tinies.length;i++){
         if (correct){
-            if (tinies[i] > snuggX+25 && tinies[i] < snuggX+50){
-                delete tinies[i];
+            if (tinies[i][0] > snuggX+25 && tinies[i][0] < snuggX+50){
+                delete tinies[i][0];
                 return true;
             }
-        }else if (tinies[i] > snuggX && tinies[i] < snuggX+25){
-            delete tinies[i];
+        }else if (tinies[i][0] > snuggX && tinies[i][0] < snuggX+25){
+            delete tinies[i][0];
             return true;
         }
     }
@@ -237,9 +246,9 @@ function crushTiniesWithBellyAndBoobs(){
     if(touchingGround){
         offset = correct ? -15:0;
         for (var i = 0; i<tinies.length;i++){
-            if (tinies[i] > snuggX+offset && tinies[i] < snuggX+offset+60){
-                crushed.push(tinies[i]);
-                delete tinies[i];
+            if (tinies[i][0] > snuggX+offset && tinies[i][0] < snuggX+offset+60){
+                crushed.push(tinies[i][0]);
+                delete tinies[i][0];
             }
         }
         for (var i = 0; i<houses.length;i++){
