@@ -17,6 +17,9 @@ c clears and r raises the amount of tinies
 <img id="snugg_bellycrush2" src="snugg_bellycrush2.png" hidden="true"></img>
 <img id="snugg_up" src="snugg_up.png" hidden="true"></img>
 <img id="snugg_down" src="snugg_down.png" hidden="true"></img>
+<img id="snugg_pickin" src="snugg_pickin.png" hidden="true"></img>
+<img id="snugg_picked" src="snugg_picked.png" hidden="true"></img>
+<img id="snugg_down_pants" src="snugg_down_pants.png" hidden="true"></img>
 <img id="bg" src="bg.png" hidden="true"></img>
 <img id="stick" src="stick.png" hidden="true"></img>
 <img id="house" src="house.png" hidden="true"></img>
@@ -43,10 +46,16 @@ var snuggfloor = 280;
 var bellycrushing = false;
 var sliding = false;
 var stand_up = false;
+var pickin = false;
+var hand_down_pants = false;
 
 
 function keyDown(e) {
-    if (e.code == "Space" && !jumping && touchingGround && !buttcrushing && !bellycrushing){
+    if (pickin){
+        if (e.code == "KeyS"){
+            hand_down_pants=true;
+        }
+    }else if (e.code == "Space" && !jumping && touchingGround && !buttcrushing && !bellycrushing){
         jumpbreak=false;
         jumping=true;
         touchingGround=false;
@@ -78,6 +87,11 @@ function keyDown(e) {
         makeMoreTinies();
     }else if (e.code == "KeyC"){
         initTinies();
+    }else if (e.code == "KeyW"){
+        if (pickupTiny()){
+            pickin=true;
+            frame=0;
+        }
     }
 
 }
@@ -94,6 +108,10 @@ function keyUp(e) {
     }else if (e.code == "KeyS"){
         buttcrushing=false;
         stand_up=true;
+        if (hand_down_pants){
+            pickin=false;
+            hand_down_pants=false;//why would anyone ever take this action?
+        }
     }
 
 }
@@ -104,7 +122,12 @@ document.addEventListener('keyup', keyUp);
 function drawSnugg(){
     var img;
     snuggoffset = 0
-    if(bellycrushing){
+    if(pickin){
+        if(frame<3) img = snugg_pickin;
+        else if(frame<4) img = snugg_picked;
+        else if(hand_down_pants) img = snugg_down_pants;
+        else img = snugg_picked;
+    }else if(bellycrushing){
         snuggoffset= 20;//correct?25:20;
         if(frame<3) img = snugg_bellycrush1;
         else img = snugg_bellycrush2;
@@ -122,7 +145,6 @@ function drawSnugg(){
             else img = snugg_buttcrush;
         }
     }else if (!touchingGround){
-        console.log(jumpbreak)
         if (jumpbreak) img = snugg1;
         else if (yVol < 2) img = snugg_up;
         else img = snugg_down;
@@ -145,13 +167,12 @@ function initTinies(){
     houses = [];
     exhouses = [];
 }
-initTinies();
 function makeMoreTinies(){
     for (var i = 0; i<10;i++) tinies.push(Math.random()*400);
     for (var i = 0; i<3;i++) houses.push(Math.random()*400);
 }
+initTinies();
 makeMoreTinies();
-
 
 function drawSticks(){
     for (var i = 0; i<tinies.length;i++){
@@ -195,6 +216,20 @@ function crushTinies(){
             delete houses[i];
         }
     }
+}
+function pickupTiny(){
+    for (var i = 0; i<tinies.length;i++){
+        if (correct){
+            if (tinies[i] > snuggX+25 && tinies[i] < snuggX+50){
+                delete tinies[i];
+                return true;
+            }
+        }else if (tinies[i] > snuggX && tinies[i] < snuggX+25){
+            delete tinies[i];
+            return true;
+        }
+    }
+    return false;
 }
 function crushTiniesWithBellyAndBoobs(){
     if(touchingGround){
