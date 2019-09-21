@@ -36,319 +36,325 @@
 		<img id="exhouse" src="exhouse.png" hidden="true" />
 
 		<script>
-		// basic stuff
-		var canvas = document.getElementById("sexyGoesHere");
-		var ctx = canvas.getContext("2d");
-		ctx.fillStyle = "#FF0000";//bloooooooood!
-		var frame = 0;
-		var snuggframes = [snugg1,snugg2,snugg3];
-		var snuggX = 10;
-		var snuggY = 10;
-		var goingRight=false;
-		var goingLeft=false;
-		var jumping = false;
-		var jumpbreak = false;
-		var buttcrushing = false;
-		var yVol = 0;
-		var touchingGround = false;
-		var correct = true;
-		var snuggfloor = 280;
-		var bellycrushing = false;
-		var sliding = false;
-		var stand_up = false;
-		var pickin = false;
-		var hand_down_pants = false;
-		var hand_down_pants_moar = false;
-		var hand_down_pants_a_bit_less = false;
-		var eating = false;
+			// basic stuff
+			var canvas = document.getElementById("sexyGoesHere");
+			var ctx = canvas.getContext("2d");
+			ctx.fillStyle = "#FF0000";//bloooooooood!
+			var frame = 0;
+			var snuggframes = [snugg1, snugg2, snugg3];
+			var snuggX = 10;
+			var snuggY = 10;
+			var goingRight = false;
+			var goingLeft = false;
+			var jumping = false;
+			var jumpbreak = false;
+			var buttcrushing = false;
+			var yVol = 0;
+			var touchingGround = false;
+			var correct = true;
+			var snuggfloor = 280;
+			var bellycrushing = false;
+			var sliding = false;
+			var stand_up = false;
+			var pickin = false;
+			var hand_down_pants = false;
+			var hand_down_pants_moar = false;
+			var hand_down_pants_a_bit_less = false;
+			var eating = false;
 
 
-		function keyDown(e) {
-			if (pickin){
-				if (hand_down_pants){
-					if (e.code == "KeyD"){
-						hand_down_pants_moar=correct;
-						hand_down_pants_a_bit_less=!correct;
-					}else if (e.code == "KeyA"){
-						hand_down_pants_moar=!correct;
-						hand_down_pants_a_bit_less=correct;
+			function keyDown(e) {
+				if(pickin) {
+					if(hand_down_pants) {
+						if(e.code == "KeyD") {
+							hand_down_pants_moar = correct;
+							hand_down_pants_a_bit_less = !correct;
+						} else if(e.code == "KeyA") {
+							hand_down_pants_moar = !correct;
+							hand_down_pants_a_bit_less = correct;
+						}
+					} else if(e.code == "KeyS") {
+						hand_down_pants = true;
+						hand_down_pants_moar = false;
+						hand_down_pants_a_bit_less = false;
+					} else if(e.code == "KeyW" && !eating) {
+						eating = true;
+						frame = 0;
 					}
-				}else if (e.code == "KeyS"){
-					hand_down_pants=true;
-					hand_down_pants_moar=false;
-					hand_down_pants_a_bit_less=false;
-				}else if (e.code == "KeyW" && !eating){
-					eating = true;
-					frame=0;
-				}
-			}else if (e.code == "Space" && !jumping && touchingGround && !buttcrushing && !bellycrushing){
-				jumpbreak=false;
-				jumping=true;
-				touchingGround=false;
-				snuggY-=10;
-				yVol = -20;
-			}else if (e.code == "Space" && !jumping){
-				jumpbreak = true;
-			}else if (e.code == "KeyD"){//RIGHT
-				if(!buttcrushing && !bellycrushing){
-					correct=true;
-				}
-				goingRight=true;
-			}else if (e.code == "KeyA"){//LEFT
-				if(!buttcrushing && !bellycrushing){
-					correct=false;
-				}
-				goingLeft=true
-			}else if (e.code == "KeyS"){//DOWN
-				if ((goingRight || goingLeft)
-					&& !bellycrushing){
-					bellycrushing = true;
-					sliding=true;
-					frame = 0;
-				}else{
-					if (!buttcrushing && touchingGround) crushTinies();
-					buttcrushing=true;
-				}
-			}else if (e.code == "KeyR"){
-				makeMoreTinies();
-			}else if (e.code == "KeyC"){
-				initTinies();
-			}else if (e.code == "KeyW"){
-				if (pickupTiny()){
-					goingRight=false;
-					goingLeft=false;
-					pickin=true;
-					frame=0;
-				}
-			}
-
-		}
-		function keyUp(e) {
-			if (hand_down_pants){
-				if (e.code == "KeyD" || e.code == "KeyA"){
-					hand_down_pants_moar=false;
-					hand_down_pants_a_bit_less=false;
-				}
-			}
-			if (e.code == "Space"){
-				jumping=false;
-				yVol = 0;
-			}else if (e.code == "KeyD"){
-				goingRight=false;
-				sliding=false;
-			}else if (e.code == "KeyA"){
-				goingLeft=false;
-				sliding=false;
-			}else if (e.code == "KeyS"){
-				buttcrushing=false;
-				stand_up=true;
-				if (hand_down_pants){
-					pickin=false;
-					hand_down_pants=false;//why would anyone ever take this action?
-				}
-			}
-
-		}
-
-		document.addEventListener('keydown', keyDown);
-		document.addEventListener('keyup', keyUp);
-
-		function drawSnugg(){
-			var img;
-			snuggoffset = 0
-			if(pickin){
-				if(eating){
-					if(frame<3) img = snugg_mouth_throw;
-					else if (frame<4) img = snugg_swallow;
-					else{
-						pickin=false;
-						eating=false;
-						img=snugg_swallow;
+				} else if(e.code == "Space" && !jumping && touchingGround && !buttcrushing && !bellycrushing) {
+					jumpbreak = false;
+					jumping = true;
+					touchingGround = false;
+					snuggY -= 10;
+					yVol = -20;
+				} else if(e.code == "Space" && !jumping) {
+					jumpbreak = true;
+				} else if(e.code == "KeyD") {//RIGHT
+					if(!buttcrushing && !bellycrushing) {
+						correct = true;
 					}
-				}else if(frame<3) img = snugg_pickin;
-				else if(frame<4) img = snugg_picked;
-				else if(hand_down_pants) {
-					if (hand_down_pants_moar) img = snugg_down_pants_moar;
-					else if (hand_down_pants_a_bit_less) img = snugg_down_pants_a_bit_less;
-					else img = snugg_down_pants;
-				}
-				else img = snugg_picked;
-			}else if(bellycrushing){
-				snuggoffset= 20;//correct?25:20;
-				if(frame<3) img = snugg_bellycrush1;
-				else img = snugg_bellycrush2;
-				if (frame==3){
-					crushTiniesWithBellyAndBoobs();
-				}
-			}else if(buttcrushing){
-				if (correct){
-					if (goingRight) img = snugg_buttcrush_forward;
-					else if (goingLeft) img = snugg_buttcrush_backward;
-					else img = snugg_buttcrush;
-				}else{
-					if (goingLeft) img = snugg_buttcrush_forward;
-					else if (goingRight) img = snugg_buttcrush_backward;
-					else img = snugg_buttcrush;
-				}
-			}else if (!touchingGround){
-				if (jumpbreak) img = snugg1;
-				else if (yVol < 2) img = snugg_up;
-				else img = snugg_down;
-			}else if (goingLeft || goingRight) img = snuggframes[frame%3];
-			else img = snugg1;
-			if(correct){
-				ctx.translate(canvas.width, 0);
-				ctx.scale(-1, 1);
-				ctx.drawImage(img,canvas.width-snugg1.width-snuggoffset-snuggX,snuggY);
-				ctx.translate(canvas.width, 0);
-				ctx.scale(-1, 1);
-			}else{
-				ctx.drawImage(img,snuggX-snuggoffset,snuggY);
-			}
-		}
-
-		function initTinies(){
-			tinies = [];
-			crushed = [];
-			houses = [];
-			exhouses = [];
-		}
-		function makeMoreTinies(){
-			// tinies are [position, speed]
-			// where position is their x dist from stage right
-			// and speed is their speed of travel to the right per tick
-			for (var i = 0; i<10;i++) tinies.push([Math.random()*400,0]);
-			// houses are just a position. x dist. You know the deal.
-			for (var i = 0; i<3;i++) houses.push(Math.random()*400);
-		}
-		initTinies();
-		makeMoreTinies();
-
-		tinySpeed = 0.7;
-		function drawSticks(){
-			for (var i = 0; i<tinies.length;i++){
-				if (frame%3 == 0) {
-					if(tinies[i][0]>snuggX+25) tinies[i][1]+=Math.random()*tinySpeed-tinySpeed/4;
-					else tinies[i][1]-=Math.random()*tinySpeed-tinySpeed/4;
-					if (tinies[i][1] > tinySpeed) tinies[i][1] = tinySpeed;
-					if (tinies[i][1] < -tinySpeed) tinies[i][1] = -tinySpeed;
-				}
-				tinies[i][0]+=tinies[i][1];// actually move em!
-				ctx.drawImage(stick,tinies[i][0],snuggfloor-stick.height);
-			}
-			for (var i = 0; i<crushed.length;i++){
-				ctx.fillRect(crushed[i], snuggfloor-1, 5, 1);
-			}
-		}
-		function drawEvenHouses(){
-			for (var i = 0; i<houses.length;i+=2){
-				ctx.drawImage(house,houses[i],snuggfloor-house.height+1);
-			}
-			//ctx.globalAlpha = 0.5;
-			for (var i = 0; i<exhouses.length;i+=2){
-				ctx.drawImage(exhouse,exhouses[i],snuggfloor-exhouse.height+1);
-			}
-		}
-		function drawOddHouses(){
-			for (var i = 1; i<houses.length;i+=2){
-				ctx.drawImage(house,houses[i],snuggfloor-house.height+1);
-			}
-			//ctx.globalAlpha = 0.5;
-			for (var i = 1; i<exhouses.length;i+=2){
-				ctx.drawImage(exhouse,exhouses[i],snuggfloor-exhouse.height+1);
-			}
-		}
-		function crushTinies(){
-			for (var i = 0; i<tinies.length;i++){
-				if (tinies[i][0] > snuggX && tinies[i][0] < snuggX+snugg1.width){
-					crushed.push(tinies[i][0]);
-					delete tinies[i][0];
-				}
-			}
-			for (var i = 0; i<houses.length;i++){
-				if (houses[i]+house.width > snuggX && houses[i] < snuggX+snugg1.width){
-					exhouses.push(houses[i]);
-					delete houses[i];
-				}
-			}
-		}
-		function pickupTiny(){
-			for (var i = 0; i<tinies.length;i++){
-				if (correct){
-					if (tinies[i][0] > snuggX+25 && tinies[i][0] < snuggX+50){
-						delete tinies[i][0];
-						return true;
+					goingRight = true;
+				} else if(e.code == "KeyA") {//LEFT
+					if(!buttcrushing && !bellycrushing) {
+						correct = false;
 					}
-				}else if (tinies[i][0] > snuggX && tinies[i][0] < snuggX+25){
-					delete tinies[i][0];
-					return true;
+					goingLeft = true
+				} else if(e.code == "KeyS") {//DOWN
+					if((goingRight || goingLeft)
+						&& !bellycrushing) {
+						bellycrushing = true;
+						sliding = true;
+						frame = 0;
+					} else {
+						if(!buttcrushing && touchingGround) crushTinies();
+						buttcrushing = true;
+					}
+				} else if(e.code == "KeyR") {
+					makeMoreTinies();
+				} else if(e.code == "KeyC") {
+					initTinies();
+				} else if(e.code == "KeyW") {
+					if(pickupTiny()) {
+						goingRight = false;
+						goingLeft = false;
+						pickin = true;
+						frame = 0;
+					}
 				}
 			}
-			return false;
-		}
-		function crushTiniesWithBellyAndBoobs(){
-			if(touchingGround){
-				offset = correct ? -15:0;
-				for (var i = 0; i<tinies.length;i++){
-					if (tinies[i][0] > snuggX+offset && tinies[i][0] < snuggX+offset+60){
+
+			function keyUp(e) {
+				if(hand_down_pants) {
+					if(e.code == "KeyD" || e.code == "KeyA") {
+						hand_down_pants_moar = false;
+						hand_down_pants_a_bit_less = false;
+					}
+				}
+				if(e.code == "Space") {
+					jumping = false;
+					yVol = 0;
+				} else if(e.code == "KeyD") {
+					goingRight = false;
+					sliding = false;
+				} else if(e.code == "KeyA") {
+					goingLeft = false;
+					sliding = false;
+				} else if(e.code == "KeyS") {
+					buttcrushing = false;
+					stand_up = true;
+					if(hand_down_pants) {
+						pickin = false;
+						hand_down_pants = false;//why would anyone ever take this action?
+					}
+				}
+			}
+
+			document.addEventListener('keydown', keyDown);
+			document.addEventListener('keyup', keyUp);
+
+			function drawSnugg() {
+				var img;
+				snuggoffset = 0
+				if(pickin) {
+					if(eating) {
+						if(frame < 3) img = snugg_mouth_throw;
+						else if(frame < 4) img = snugg_swallow;
+						else {
+							pickin = false;
+							eating = false;
+							img = snugg_swallow;
+						}
+					} else if(frame < 3) img = snugg_pickin;
+					else if(frame < 4) img = snugg_picked;
+					else if(hand_down_pants) {
+						if(hand_down_pants_moar) img = snugg_down_pants_moar;
+						else if(hand_down_pants_a_bit_less) img = snugg_down_pants_a_bit_less;
+						else img = snugg_down_pants;
+					} else img = snugg_picked;
+				} else if(bellycrushing) {
+					snuggoffset = 20;//correct?25:20;
+					if(frame < 3) img = snugg_bellycrush1;
+					else img = snugg_bellycrush2;
+					if(frame == 3) {
+						crushTiniesWithBellyAndBoobs();
+					}
+				} else if(buttcrushing) {
+					if(correct) {
+						if(goingRight) img = snugg_buttcrush_forward;
+						else if(goingLeft) img = snugg_buttcrush_backward;
+						else img = snugg_buttcrush;
+					} else {
+						if(goingLeft) img = snugg_buttcrush_forward;
+						else if(goingRight) img = snugg_buttcrush_backward;
+						else img = snugg_buttcrush;
+					}
+				} else if(!touchingGround) {
+					if(jumpbreak) img = snugg1;
+					else if(yVol < 2) img = snugg_up;
+					else img = snugg_down;
+				} else if(goingLeft || goingRight) img = snuggframes[frame % 3];
+				else img = snugg1;
+				if(correct) {
+					ctx.translate(canvas.width, 0);
+					ctx.scale(-1, 1);
+					ctx.drawImage(img, canvas.width - snugg1.width - snuggoffset - snuggX, snuggY);
+					ctx.translate(canvas.width, 0);
+					ctx.scale(-1, 1);
+				} else {
+					ctx.drawImage(img, snuggX - snuggoffset, snuggY);
+				}
+			}
+
+			function initTinies() {
+				tinies = [];
+				crushed = [];
+				houses = [];
+				exhouses = [];
+			}
+
+			function makeMoreTinies() {
+				// tinies are [position, speed]
+				// where position is their x dist from stage right
+				// and speed is their speed of travel to the right per tick
+				for(var i = 0; i < 10; i++) tinies.push([Math.random() * 400, 0]);
+				// houses are just a position. x dist. You know the deal.
+				for(var i = 0; i < 3; i++) houses.push(Math.random() * 400);
+			}
+
+			initTinies();
+			makeMoreTinies();
+
+			tinySpeed = 0.7;
+
+			function drawSticks() {
+				for(var i = 0; i < tinies.length; i++) {
+					if(frame % 3 == 0) {
+						if(tinies[i][0] > snuggX + 25) tinies[i][1] += Math.random() * tinySpeed - tinySpeed / 4;
+						else tinies[i][1] -= Math.random() * tinySpeed - tinySpeed / 4;
+						if(tinies[i][1] > tinySpeed) tinies[i][1] = tinySpeed;
+						if(tinies[i][1] < -tinySpeed) tinies[i][1] = -tinySpeed;
+					}
+					tinies[i][0] += tinies[i][1];// actually move em!
+					ctx.drawImage(stick, tinies[i][0], snuggfloor - stick.height);
+				}
+				for(var i = 0; i < crushed.length; i++) {
+					ctx.fillRect(crushed[i], snuggfloor - 1, 5, 1);
+				}
+			}
+
+			function drawEvenHouses() {
+				for(var i = 0; i < houses.length; i += 2) {
+					ctx.drawImage(house, houses[i], snuggfloor - house.height + 1);
+				}
+				//ctx.globalAlpha = 0.5;
+				for(var i = 0; i < exhouses.length; i += 2) {
+					ctx.drawImage(exhouse, exhouses[i], snuggfloor - exhouse.height + 1);
+				}
+			}
+
+			function drawOddHouses() {
+				for(var i = 1; i < houses.length; i += 2) {
+					ctx.drawImage(house, houses[i], snuggfloor - house.height + 1);
+				}
+				//ctx.globalAlpha = 0.5;
+				for(var i = 1; i < exhouses.length; i += 2) {
+					ctx.drawImage(exhouse, exhouses[i], snuggfloor - exhouse.height + 1);
+				}
+			}
+
+			function crushTinies() {
+				for(var i = 0; i < tinies.length; i++) {
+					if(tinies[i][0] > snuggX && tinies[i][0] < snuggX + snugg1.width) {
 						crushed.push(tinies[i][0]);
 						delete tinies[i][0];
 					}
 				}
-				for (var i = 0; i<houses.length;i++){
-					if (houses[i]+house.width > snuggX+offset && houses[i] < snuggX+offset+60){
+				for(var i = 0; i < houses.length; i++) {
+					if(houses[i] + house.width > snuggX && houses[i] < snuggX + snugg1.width) {
 						exhouses.push(houses[i]);
 						delete houses[i];
 					}
 				}
 			}
-		}
 
-
-		function tik() {
-			frame++;
-			ctx.clearRect(0,0,400,300);
-			ctx.drawImage(bg,0,0);
-			drawEvenHouses();
-			drawSnugg();
-			drawOddHouses();
-			drawSticks();
-
-			if (stand_up && frame >5){
-				bellycrushing=false;
-				stand_up = false;
+			function pickupTiny() {
+				for(var i = 0; i < tinies.length; i++) {
+					if(correct) {
+						if(tinies[i][0] > snuggX + 25 && tinies[i][0] < snuggX + 50) {
+							delete tinies[i][0];
+							return true;
+						}
+					} else if(tinies[i][0] > snuggX && tinies[i][0] < snuggX + 25) {
+						delete tinies[i][0];
+						return true;
+					}
+				}
+				return false;
 			}
-			if ((!touchingGround || !buttcrushing)// u cant move when butcrushing and on ground
-				){
-				if (!bellycrushing){
-					if(goingLeft) snuggX-=10;
-					if(goingRight) snuggX+=10;
-				}else{
-					if (frame < 13 && sliding){
-						if(goingLeft) snuggX-=14-frame;
-						if(goingRight) snuggX+=14-frame;
-						if (frame > 3) crushTiniesWithBellyAndBoobs();
+
+			function crushTiniesWithBellyAndBoobs() {
+				if(touchingGround) {
+					offset = correct ? -15 : 0;
+					for(var i = 0; i < tinies.length; i++) {
+						if(tinies[i][0] > snuggX + offset && tinies[i][0] < snuggX + offset + 60) {
+							crushed.push(tinies[i][0]);
+							delete tinies[i][0];
+						}
+					}
+					for(var i = 0; i < houses.length; i++) {
+						if(houses[i] + house.width > snuggX + offset && houses[i] < snuggX + offset + 60) {
+							exhouses.push(houses[i]);
+							delete houses[i];
+						}
 					}
 				}
 			}
 
-			if(jumping) {
-				yVol-=4;
-			}
-			if (snuggY < snuggfloor-snugg1.height){
-				yVol+=6;
-				if (buttcrushing) yVol+=4;
-				snuggY+=yVol;
-			}
-			if (snuggY >= snuggfloor-snugg1.height){
-				if(!touchingGround) crushTinies();
-				touchingGround=true;
-				snuggY = snuggfloor-snugg1.height;
-			}
-			setTimeout(tik,100);
-		}
 
-		tik();
+			function tik() {
+				frame++;
+				ctx.clearRect(0, 0, 400, 300);
+				ctx.drawImage(bg, 0, 0);
+				drawEvenHouses();
+				drawSnugg();
+				drawOddHouses();
+				drawSticks();
+
+				if(stand_up && frame > 5) {
+					bellycrushing = false;
+					stand_up = false;
+				}
+				if((!touchingGround || !buttcrushing)// u cant move when butcrushing and on ground
+				) {
+					if(!bellycrushing) {
+						if(goingLeft) snuggX -= 10;
+						if(goingRight) snuggX += 10;
+					} else {
+						if(frame < 13 && sliding) {
+							if(goingLeft) snuggX -= 14 - frame;
+							if(goingRight) snuggX += 14 - frame;
+							if(frame > 3) crushTiniesWithBellyAndBoobs();
+						}
+					}
+				}
+
+				if(jumping) {
+					yVol -= 4;
+				}
+				if(snuggY < snuggfloor - snugg1.height) {
+					yVol += 6;
+					if(buttcrushing) yVol += 4;
+					snuggY += yVol;
+				}
+				if(snuggY >= snuggfloor - snugg1.height) {
+					if(!touchingGround) crushTinies();
+					touchingGround = true;
+					snuggY = snuggfloor - snugg1.height;
+				}
+				setTimeout(tik, 100);
+			}
+
+			tik();
 
 		</script>
 	</body>
