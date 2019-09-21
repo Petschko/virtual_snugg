@@ -20,6 +20,8 @@ c clears and r raises the amount of tinies
 <img id="snugg_pickin" src="snugg_pickin.png" hidden="true"></img>
 <img id="snugg_picked" src="snugg_picked.png" hidden="true"></img>
 <img id="snugg_down_pants" src="snugg_down_pants.png" hidden="true"></img>
+<img id="snugg_down_pants_moar" src="snugg_down_pants_moar.png" hidden="true"></img>
+<img id="snugg_down_pants_a_bit_less" src="snugg_down_pants_a_bit_less.png" hidden="true"></img>
 <img id="bg" src="bg.png" hidden="true"></img>
 <img id="stick" src="stick.png" hidden="true"></img>
 <img id="house" src="house.png" hidden="true"></img>
@@ -48,12 +50,25 @@ var sliding = false;
 var stand_up = false;
 var pickin = false;
 var hand_down_pants = false;
+var hand_down_pants_moar = false;
+var hand_down_pants_a_bit_less = false;
 
 
 function keyDown(e) {
+    console.log(e.code);
     if (pickin){
         if (e.code == "KeyS"){
             hand_down_pants=true;
+            hand_down_pants_moar=false;
+            hand_down_pants_a_bit_less=false;
+        } else if (hand_down_pants){
+            if (e.code == "KeyD"){
+                hand_down_pants_moar=correct;
+                hand_down_pants_a_bit_less=!correct;
+            }else if (e.code == "KeyA"){
+                hand_down_pants_moar=!correct;
+                hand_down_pants_a_bit_less=correct;
+            }
         }
     }else if (e.code == "Space" && !jumping && touchingGround && !buttcrushing && !bellycrushing){
         jumpbreak=false;
@@ -98,6 +113,12 @@ function keyDown(e) {
 
 }
 function keyUp(e) {
+    if (hand_down_pants){
+        if (e.code == "KeyD" || e.code == "KeyA"){
+            hand_down_pants_moar=false;
+            hand_down_pants_a_bit_less=false;
+        }
+    }
     if (e.code == "Space"){
         jumping=false;
         yVol = 0;
@@ -127,7 +148,11 @@ function drawSnugg(){
     if(pickin){
         if(frame<3) img = snugg_pickin;
         else if(frame<4) img = snugg_picked;
-        else if(hand_down_pants) img = snugg_down_pants;
+        else if(hand_down_pants) {
+            if (hand_down_pants_moar) img = snugg_down_pants_moar;
+            else if (hand_down_pants_a_bit_less) img = snugg_down_pants_a_bit_less;
+            else img = snugg_down_pants;
+        }
         else img = snugg_picked;
     }else if(bellycrushing){
         snuggoffset= 20;//correct?25:20;
