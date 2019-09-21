@@ -63,9 +63,11 @@
 			var eating = false;
 
 			/**
-			 * todo: add function documentation comment
+			 * This gets called when user presses down on a key
+             * and commands the snugg to take silly actions!
 			 *
-			 * @param {Object} e - Todo: add param description
+			 * @param {Object} e - event code is compared to see
+             *                      what key the user pressed
 			 */
 			function keyDown(e) {
 				if(pickin) {
@@ -129,9 +131,11 @@
 			}
 
 			/**
-			 * todo: add function documentation comment
+			 * As with the keyDown function, this accepts key up
+             * events from the user.
 			 *
-			 * @param {Object} e - Todo: add param description
+			 * @param {Object} e - event code is compared to see
+             *                      what key the user pressed
 			 */
 			function keyUp(e) {
 				if(hand_down_pants) {
@@ -165,7 +169,10 @@
 			document.addEventListener('keyup', keyUp);
 
 			/**
-			 * todo: add function documentation comment
+			 * Figure out what state the snugg is in and draw
+             * the picture of the snugg in that state.
+             * try to keep game logic out of here unless you
+             * have a good reason or whatever.
 			 */
 			function drawSnugg() {
 				var img;
@@ -255,7 +262,7 @@
 			}
 
 			/**
-			 * Creates more Tinies
+			 * Creates more Tinies and their tiny houses
 			 */
 			function makeMoreTinies() {
 				let i;
@@ -276,7 +283,9 @@
 			tinySpeed = 0.6;
 
 			/**
-			 * todo: add function documentation comment
+			 *  Draws all the tiny stick people and updates
+             * their ai running and position stuff cause we're
+             * looping over all of them here anyway may as well.
 			 */
 			function drawSticks() {
 				let i;
@@ -306,6 +315,8 @@
 
 			/**
 			 * Draws even Houses
+             * separated from drawing odd houses so that some can be in front
+             * of and some behind the snugg. Also because odd houses are odd.
 			 */
 			function drawEvenHouses() {
 				let i;
@@ -333,7 +344,10 @@
 			}
 
 			/**
-			 *  todo: add function documentation comment
+             *  Look through tinies to see which ones are currently under snuggz
+             *  and crush them.
+			 *  todo: abstract this so that it takes coordinates and can be
+             *        merged with function crushTiniesWithBellyAndBoobs
 			 */
 			function crushTinies() {
 				let i;
@@ -354,9 +368,10 @@
 			}
 
 			/**
-			 * todo: add function documentation comment
+			 * Look throuh list of tinies to see if any are within grasp and
+             * if so, remove one from the list of tinies on the ground.
 			 *
-			 * @return {Boolean} - todo: add return value description
+			 * @return {Boolean} - returns true if a tiny has been picked up.
 			 */
 			function pickupTiny() {
 				for(let i = 0; i < tinies.length; i++) {
@@ -377,7 +392,7 @@
 			}
 
 			/**
-			 * todo: add function documentation comment
+			 *  This function is 100% self explanitory.
 			 */
 			function crushTiniesWithBellyAndBoobs() {
 				if(touchingGround) {
@@ -401,7 +416,9 @@
 			}
 
 			/**
-			 * todo: add function documentation comment
+			 *  tik updates the game state. It calls itself when it is finished to continually
+             * update the game. Because of this it only needs to be called once to start the
+             * game running.
 			 */
 			function tik() {
 				frame++;
