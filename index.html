@@ -89,6 +89,8 @@ function keyDown(e) {
         initTinies();
     }else if (e.code == "KeyW"){
         if (pickupTiny()){
+            goingRight=false;
+            goingLeft=false;
             pickin=true;
             frame=0;
         }
