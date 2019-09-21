@@ -153,11 +153,11 @@ function drawSnugg(){
     if(pickin){
         if(eating){
             if(frame<3) img = snugg_mouth_throw;
-            else if (frame<5) img = snugg_swallow;
+            else if (frame<4) img = snugg_swallow;
             else{
                 pickin=false;
                 eating=false;
-                img=snugg1;
+                img=snugg_swallow;
             }
         }else if(frame<3) img = snugg_pickin;
         else if(frame<4) img = snugg_picked;
