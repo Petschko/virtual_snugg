@@ -62,7 +62,11 @@
 			var hand_down_pants_a_bit_less = false;
 			var eating = false;
 
-
+			/**
+			 * todo: add function documentation comment
+			 *
+			 * @param {Object} e - Todo: add param description
+			 */
 			function keyDown(e) {
 				if(pickin) {
 					if(hand_down_pants) {
@@ -124,6 +128,11 @@
 				}
 			}
 
+			/**
+			 * todo: add function documentation comment
+			 *
+			 * @param {Object} e - Todo: add param description
+			 */
 			function keyUp(e) {
 				if(hand_down_pants) {
 					if(e.code == "KeyD" || e.code == "KeyA") {
@@ -155,6 +164,9 @@
 			document.addEventListener('keydown', keyDown);
 			document.addEventListener('keyup', keyUp);
 
+			/**
+			 * todo: add function documentation comment
+			 */
 			function drawSnugg() {
 				var img;
 				snuggoffset = 0;
@@ -232,6 +244,9 @@
 					ctx.drawImage(img, snuggX - snuggoffset, snuggY);
 			}
 
+			/**
+			 * Initiates Objects
+			 */
 			function initTinies() {
 				tinies = [];
 				crushed = [];
@@ -239,6 +254,9 @@
 				exhouses = [];
 			}
 
+			/**
+			 * Creates more Tinies
+			 */
 			function makeMoreTinies() {
 				// tinies are [position, speed]
 				// where position is their x dist from stage right
@@ -255,6 +273,9 @@
 			makeMoreTinies();
 			tinySpeed = 0.7;
 
+			/**
+			 * todo: add function documentation comment
+			 */
 			function drawSticks() {
 				for(var i = 0; i < tinies.length; i++) {
 					if(frame % 3 == 0) {
@@ -278,6 +299,9 @@
 					ctx.fillRect(crushed[i], snuggfloor - 1, 5, 1);
 			}
 
+			/**
+			 * Draws even Houses
+			 */
 			function drawEvenHouses() {
 				for(var i = 0; i < houses.length; i += 2)
 					ctx.drawImage(house, houses[i], snuggfloor - house.height + 1);
@@ -287,6 +311,9 @@
 					ctx.drawImage(exhouse, exhouses[i], snuggfloor - exhouse.height + 1);
 			}
 
+			/**
+			 * Draws odd Houses
+			 */
 			function drawOddHouses() {
 				for(var i = 1; i < houses.length; i += 2)
 					ctx.drawImage(house, houses[i], snuggfloor - house.height + 1);
@@ -296,6 +323,9 @@
 					ctx.drawImage(exhouse, exhouses[i], snuggfloor - exhouse.height + 1);
 			}
 
+			/**
+			 *  todo: add function documentation comment
+			 */
 			function crushTinies() {
 				for(var i = 0; i < tinies.length; i++) {
 					if(tinies[i][0] > snuggX && tinies[i][0] < snuggX + snugg1.width) {
@@ -312,6 +342,11 @@
 				}
 			}
 
+			/**
+			 * todo: add function documentation comment
+			 *
+			 * @return {Boolean} - todo: add return value description
+			 */
 			function pickupTiny() {
 				for(var i = 0; i < tinies.length; i++) {
 					if(correct) {
@@ -330,6 +365,9 @@
 				return false;
 			}
 
+			/**
+			 * todo: add function documentation comment
+			 */
 			function crushTiniesWithBellyAndBoobs() {
 				if(touchingGround) {
 					offset = correct ? -15 : 0;
@@ -350,7 +388,9 @@
 				}
 			}
 
-
+			/**
+			 * todo: add function documentation comment
+			 */
 			function tik() {
 				frame++;
 				ctx.clearRect(0, 0, 400, 300);
