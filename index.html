@@ -218,12 +218,15 @@ function makeMoreTinies(){
 initTinies();
 makeMoreTinies();
 
-tinySpeed = 0.7;
+tinySpeed = 0.6;
 function drawSticks(){
     for (var i = 0; i<tinies.length;i++){
         if (frame%3 == 0) {
-            if(tinies[i][0]>snuggX+25) tinies[i][1]+=Math.random()*tinySpeed-tinySpeed/4;
-            else tinies[i][1]-=Math.random()*tinySpeed-tinySpeed/4;
+            snuggDelta = 1/(1+Math.pow(tinies[i][0] - snuggX+25,2)/4000);
+            speedchange = (snuggDelta+.2)*tinySpeed*(Math.random()+snuggDelta-.5);
+            if(tinies[i][0]>snuggX+25) tinies[i][1]+= speedchange;
+            else tinies[i][1]-=speedchange
+            tinies[i][1]*=0.95;//they slow down over time
             if (tinies[i][1] > tinySpeed) tinies[i][1] = tinySpeed;
             if (tinies[i][1] < -tinySpeed) tinies[i][1] = -tinySpeed;
         }
