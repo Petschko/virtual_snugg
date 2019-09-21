@@ -258,14 +258,16 @@
 			 * Creates more Tinies
 			 */
 			function makeMoreTinies() {
+				let i;
+
 				// tinies are [position, speed]
 				// where position is their x dist from stage right
 				// and speed is their speed of travel to the right per tick
-				for(var i = 0; i < 10; i++)
+				for(i = 0; i < 10; i++)
 					tinies.push([Math.random() * 400, 0]);
 
 				// houses are just a position. x dist. You know the deal.
-				for(var i = 0; i < 3; i++)
+				for(i = 0; i < 3; i++)
 					houses.push(Math.random() * 400);
 			}
 
@@ -277,7 +279,9 @@
 			 * todo: add function documentation comment
 			 */
 			function drawSticks() {
-				for(var i = 0; i < tinies.length; i++) {
+				let i;
+
+				for(i = 0; i < tinies.length; i++) {
 					if(frame % 3 == 0) {
 						if(tinies[i][0] > snuggX + 25)
 							tinies[i][1] += Math.random() * tinySpeed - tinySpeed / 4;
@@ -295,7 +299,7 @@
 					ctx.drawImage(stick, tinies[i][0], snuggfloor - stick.height);
 				}
 
-				for(var i = 0; i < crushed.length; i++)
+				for(i = 0; i < crushed.length; i++)
 					ctx.fillRect(crushed[i], snuggfloor - 1, 5, 1);
 			}
 
@@ -303,11 +307,13 @@
 			 * Draws even Houses
 			 */
 			function drawEvenHouses() {
-				for(var i = 0; i < houses.length; i += 2)
+				let i;
+
+				for(i = 0; i < houses.length; i += 2)
 					ctx.drawImage(house, houses[i], snuggfloor - house.height + 1);
 
 				//ctx.globalAlpha = 0.5;
-				for(var i = 0; i < exhouses.length; i += 2)
+				for(i = 0; i < exhouses.length; i += 2)
 					ctx.drawImage(exhouse, exhouses[i], snuggfloor - exhouse.height + 1);
 			}
 
@@ -315,11 +321,13 @@
 			 * Draws odd Houses
 			 */
 			function drawOddHouses() {
-				for(var i = 1; i < houses.length; i += 2)
+				let i;
+
+				for(i = 1; i < houses.length; i += 2)
 					ctx.drawImage(house, houses[i], snuggfloor - house.height + 1);
 
 				//ctx.globalAlpha = 0.5;
-				for(var i = 1; i < exhouses.length; i += 2)
+				for(i = 1; i < exhouses.length; i += 2)
 					ctx.drawImage(exhouse, exhouses[i], snuggfloor - exhouse.height + 1);
 			}
 
@@ -327,14 +335,16 @@
 			 *  todo: add function documentation comment
 			 */
 			function crushTinies() {
-				for(var i = 0; i < tinies.length; i++) {
+				let i;
+
+				for(i = 0; i < tinies.length; i++) {
 					if(tinies[i][0] > snuggX && tinies[i][0] < snuggX + snugg1.width) {
 						crushed.push(tinies[i][0]);
 						delete tinies[i][0];
 					}
 				}
 
-				for(var i = 0; i < houses.length; i++) {
+				for(i = 0; i < houses.length; i++) {
 					if(houses[i] + house.width > snuggX && houses[i] < snuggX + snugg1.width) {
 						exhouses.push(houses[i]);
 						delete houses[i];
@@ -348,7 +358,7 @@
 			 * @return {Boolean} - todo: add return value description
 			 */
 			function pickupTiny() {
-				for(var i = 0; i < tinies.length; i++) {
+				for(let i = 0; i < tinies.length; i++) {
 					if(correct) {
 						if(tinies[i][0] > snuggX + 25 && tinies[i][0] < snuggX + 50) {
 							delete tinies[i][0];
@@ -370,16 +380,17 @@
 			 */
 			function crushTiniesWithBellyAndBoobs() {
 				if(touchingGround) {
+					let i;
 					offset = correct ? -15 : 0;
 
-					for(var i = 0; i < tinies.length; i++) {
+					for(i = 0; i < tinies.length; i++) {
 						if(tinies[i][0] > snuggX + offset && tinies[i][0] < snuggX + offset + 60) {
 							crushed.push(tinies[i][0]);
 							delete tinies[i][0];
 						}
 					}
 
-					for(var i = 0; i < houses.length; i++) {
+					for(i = 0; i < houses.length; i++) {
 						if(houses[i] + house.width > snuggX + offset && houses[i] < snuggX + offset + 60) {
 							exhouses.push(houses[i]);
 							delete houses[i];
