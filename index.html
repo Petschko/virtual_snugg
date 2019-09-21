@@ -22,6 +22,8 @@ c clears and r raises the amount of tinies
 <img id="snugg_down_pants" src="snugg_down_pants.png" hidden="true"></img>
 <img id="snugg_down_pants_moar" src="snugg_down_pants_moar.png" hidden="true"></img>
 <img id="snugg_down_pants_a_bit_less" src="snugg_down_pants_a_bit_less.png" hidden="true"></img>
+<img id="snugg_mouth_throw" src="snugg_mouth_throw.png" hidden="true"></img>
+<img id="snugg_swallow" src="snugg_swallow.png" hidden="true"></img>
 <img id="bg" src="bg.png" hidden="true"></img>
 <img id="stick" src="stick.png" hidden="true"></img>
 <img id="house" src="house.png" hidden="true"></img>
@@ -52,16 +54,12 @@ var pickin = false;
 var hand_down_pants = false;
 var hand_down_pants_moar = false;
 var hand_down_pants_a_bit_less = false;
+var eating = false;
 
 
 function keyDown(e) {
-    console.log(e.code);
     if (pickin){
-        if (e.code == "KeyS"){
-            hand_down_pants=true;
-            hand_down_pants_moar=false;
-            hand_down_pants_a_bit_less=false;
-        } else if (hand_down_pants){
+        if (hand_down_pants){
             if (e.code == "KeyD"){
                 hand_down_pants_moar=correct;
                 hand_down_pants_a_bit_less=!correct;
@@ -69,6 +67,13 @@ function keyDown(e) {
                 hand_down_pants_moar=!correct;
                 hand_down_pants_a_bit_less=correct;
             }
+        }else if (e.code == "KeyS"){
+            hand_down_pants=true;
+            hand_down_pants_moar=false;
+            hand_down_pants_a_bit_less=false;
+        }else if (e.code == "KeyW" && !eating){
+            eating = true;
+            frame=0;
         }
     }else if (e.code == "Space" && !jumping && touchingGround && !buttcrushing && !bellycrushing){
         jumpbreak=false;
@@ -146,7 +151,15 @@ function drawSnugg(){
     var img;
     snuggoffset = 0
     if(pickin){
-        if(frame<3) img = snugg_pickin;
+        if(eating){
+            if(frame<3) img = snugg_mouth_throw;
+            else if (frame<5) img = snugg_swallow;
+            else{
+                pickin=false;
+                eating=false;
+                img=snugg1;
+            }
+        }else if(frame<3) img = snugg_pickin;
         else if(frame<4) img = snugg_picked;
         else if(hand_down_pants) {
             if (hand_down_pants_moar) img = snugg_down_pants_moar;
