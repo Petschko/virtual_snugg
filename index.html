@@ -23,6 +23,8 @@
 		<img id="snugg_buttcrush_backward" src="picz/snugg_buttcrush_backward.png" hidden="hidden" alt="Snugg Buttcrush backward" />
 		<img id="snugg_bellycrush1" src="picz/snugg_bellycrush1.png" hidden="hidden" alt="Snugg Bellycrush (1)" />
 		<img id="snugg_bellycrush2" src="picz/snugg_bellycrush2.png" hidden="hidden" alt="Snugg Bellycrush (2)" />
+		<img id="snugg_bellycrush_fore" src="picz/snugg_bellycrush_fore.png" hidden="hidden" alt="Snugg Bellycrush duh!" />
+		<img id="snugg_bellycrush_back" src="picz/snugg_bellycrush_back.png" hidden="hidden" alt="Snugg Bellycrush duh!" />
 		<img id="snugg_up" src="picz/snugg_up.png" hidden="hidden" alt="Smugg up" />
 		<img id="snugg_down" src="picz/snugg_down.png" hidden="hidden" alt="Smugg down" />
 		<img id="snugg_pickin" src="picz/snugg_pickin.png" hidden="hidden" alt="Smugg picking"/>
@@ -210,8 +212,21 @@
 
 					if(frame < 3)
 						img = snugg_bellycrush1;
-					else
-						img = snugg_bellycrush2;
+					else if(correct) {
+						if(goingRight)
+							img = snugg_bellycrush_fore;
+						else if(goingLeft)
+							img = snugg_bellycrush_back;
+						else
+							img = snugg_bellycrush2;
+					} else {
+						if(goingLeft)
+							img = snugg_bellycrush_fore;
+						else if(goingRight)
+							img = snugg_bellycrush_back;
+						else
+							img = snugg_bellycrush2;
+					}
 
 					if(frame == 3)
 						crushTiniesWithBellyAndBoobs();
