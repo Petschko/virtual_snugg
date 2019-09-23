@@ -12,6 +12,8 @@
 		wsad and space move the snugg
 		<br>
 		c clears and r raises the amount of tinies
+		<hr>
+        <button onclick="drawblood=!drawblood;">toggle blood</button>
 
 		<img id="snugg1" src="picz/snugg1.png" hidden="hidden" alt="Snugg (1)" />
 		<img id="snugg2" src="picz/snugg2.png" hidden="hidden" alt="Snugg (2)" />
@@ -61,6 +63,7 @@
 			var hand_down_pants_moar = false;
 			var hand_down_pants_a_bit_less = false;
 			var eating = false;
+            var drawblood = true;
 
 			/**
 			 * This gets called when user presses down on a key
@@ -309,8 +312,9 @@
 					ctx.drawImage(stick, tinies[i][0], snuggfloor - stick.height);
 				}
 
-				for(i = 0; i < crushed.length; i++)
-					ctx.fillRect(crushed[i], snuggfloor - 1, 5, 1);
+                if (drawblood)
+                    for(i = 0; i < crushed.length; i++)
+                        ctx.fillRect(crushed[i], snuggfloor - 1, 5, 1);
 			}
 
 			/**
