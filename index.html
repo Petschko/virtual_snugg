@@ -232,23 +232,18 @@
 					else if(correct) {
                         if(goingRight){
 							img = snugg_bellycrush_fore;
-                            crushTiniesWithBellyAndBoobs();
                         }else if(goingLeft)
 							img = snugg_bellycrush_back;
 						else
 							img = snugg_bellycrush2;
 					} else {
                         if(goingLeft){
-                            crushTiniesWithBellyAndBoobs();
 							img = snugg_bellycrush_fore;
                         }else if(goingRight)
 							img = snugg_bellycrush_back;
 						else
 							img = snugg_bellycrush2;
 					}
-
-					if(frame == 3)
-						crushTiniesWithBellyAndBoobs();
 
 				} else if(buttcrushing) {
 					if(correct) {
@@ -356,11 +351,11 @@
                         ctx.translate(0, stick.height);
                     }else{  // uhh they must have fallen somehow. I don't know anything about it...
                         tinies[i][2]+=1;
-                        ctx.translate(6, -2);
+                        ctx.translate(6, -3);
                         ctx.rotate(rot);
                         ctx.drawImage(stick, 0,0);// tinies[i][0], snuggfloor - stick.height);
                         ctx.rotate(-rot);
-                        ctx.translate(-6, 2);
+                        ctx.translate(-6, 3);
                     }
 
                     ctx.translate(-tinies[i][0], -snuggfloor );
@@ -500,6 +495,9 @@
 					stand_up = false;
 				}
 
+                if(buttcrushing)
+                    crushTinies();
+
 				if(!touchingGround || !buttcrushing) { // u cant move when butcrushing and on ground
 					if(!bellycrushing) {
 						if(goingLeft)
@@ -514,10 +512,9 @@
 
 							if(goingRight)
 								snuggX += 14 - frame;
-
-							if(frame > 3)
-								crushTiniesWithBellyAndBoobs();
 						}
+                        if(frame >= 3)
+                            crushTiniesWithBellyAndBoobs();
 					}
 				}
 
